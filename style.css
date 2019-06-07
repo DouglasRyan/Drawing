@@ -84,8 +84,23 @@ body{
     box-sizing: border-box;
 }
 
-.thickness>span{
+#action span{
     padding:0 10px;
     border:2px solid red;
     cursor: pointer;
+}
+
+#color{
+    width:40px;height:40px;
+    border-style: none;
+    padding:0;margin:0;
+    border:none;
+    border-radius: 50%;
+    cursor:pointer;
+    background: none;
+    color:red;
+}
+
+#clear{
+    display: inline-block;
 }

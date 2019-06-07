@@ -26,15 +26,16 @@
                     <span>1</span><span>2</span><span>3</span><span>4</span>
                 </div>
             </div>
-            <input type="color" name="" id="">
+
         </div>
-        <div id="thickness"></div>
-        <div id="color"></div>
+        <div id="clear">
+            <button>clear</button>
+        </div>
+        <div class="colorContainer">
+            <input type="color" name="" id="color">
+        </div>
     </div>
-
-    <span id="a"></span>
     <script>
-
         let canvas = document.getElementById('hb')
         let hb = canvas.getContext('2d')
         let pen = document.getElementById('pen')
@@ -42,8 +43,10 @@
         let eraserEnabled = eraser.value
         let eT = document.getElementById('eraserThickness')
         let pT = document.getElementById('penThickness')
-        let eSize
+        let eSize = 2
         let pSize = 3
+        let color = document.getElementById('color')
+        let clear = document.getElementById('clear')
 
         autoSetCanvasSize()
         listenToUser(canvas)
@@ -59,12 +62,25 @@
             pen.classList.remove('active')
         }
         pT.onclick = (e) => {
+            eraserEnabled = false
+            pen.classList.add('active')
+            eraser.classList.remove('active')
             pSize = e.target.innerText - 0
-            console.log(e.target)
         }
         eT.onclick = (e) => {
+            eraserEnabled = true
+            eraser.classList.add('active')
+            pen.classList.remove('active')
             eSize = e.target.innerText - 0
-            console.log(e.target)
+        }
+        clear.onclick = () => {
+            hb.clearRect(0, 0, canvas.width, canvas.height)
+            clear.classList.add('active')
+            eraser.classList.remove('active')
+            pen.classList.remove('active')
+            setTimeout(() => {
+                clear.classList.remove('active')
+            }, 1000);
         }
 
         function autoSetCanvasSize() {
@@ -86,10 +102,11 @@
                 using = true
                 let x = e.clientX
                 let y = e.clientY
-                if (eraserEnabled) {
+                if (eraserEnabled === true) {
                     hb.clearRect(x - 5, y - 5, eSize * 10, eSize * 10)
                 } else {
                     oldPoint = { "x": x, "y": y }
+
                 }
             }
             canvas.onmousemove = (e) => {
@@ -98,7 +115,7 @@
                 if (!using) {
                     return;
                 }
-                if (eraserEnabled) {
+                if (eraserEnabled === true) {
                     hb.clearRect(x - 5, y - 5, eSize * 10, eSize * 10)
                 } else {
                     newPoint = { "x": x, "y": y }
@@ -113,6 +130,7 @@
                 hb.lineCap = 'round'
                 hb.lineJoin = 'round'
                 hb.lineWidth = pSize * 3
+                hb.strokeStyle = color.value
                 hb.beginPath()
                 hb.moveTo(x1, y1)
                 hb.lineTo(x2, y2)
