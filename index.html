@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>canvas</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <canvas id="hb"></canvas>
+    <div id="action">
+        <div id="turn">
+            <div class="penContainer">
+                <button id="pen" class="active">pen</button>
+                <div id="penThickness" class="thickness">
+                    <span>1</span><span>2</span><span>3</span><span>4</span>
+                </div>
+            </div>
+
+            <div class="eraserContainer">
+                <button id="eraser" value="false">eraser</button>
+                <div id="eraserThickness" class="thickness">
+                    <span>1</span><span>2</span><span>3</span><span>4</span>
+                </div>
+            </div>
+            <input type="color" name="" id="">
+        </div>
+        <div id="thickness"></div>
+        <div id="color"></div>
+    </div>
+
+    <span id="a"></span>
+    <script>
+
+        let canvas = document.getElementById('hb')
+        let hb = canvas.getContext('2d')
+        let pen = document.getElementById('pen')
+        let eraser = document.getElementById('eraser')
+        let eraserEnabled = eraser.value
+        let eT = document.getElementById('eraserThickness')
+        let pT = document.getElementById('penThickness')
+        let eSize
+        let pSize = 3
+
+        autoSetCanvasSize()
+        listenToUser(canvas)
+
+        pen.onclick = () => {
+            eraserEnabled = false
+            pen.classList.add('active')
+            eraser.classList.remove('active')
+        }
+        eraser.onclick = () => {
+            eraserEnabled = true
+            eraser.classList.add('active')
+            pen.classList.remove('active')
+        }
+        pT.onclick = (e) => {
+            pSize = e.target.innerText - 0
+            console.log(e.target)
+        }
+        eT.onclick = (e) => {
+            eSize = e.target.innerText - 0
+            console.log(e.target)
+        }
+
+        function autoSetCanvasSize() {
+            setCanvasSize()
+            window.onresize = () => { setCanvasSize() }
+            function setCanvasSize() {
+                let pageWidth = document.documentElement.clientWidth
+                let pageHeight = document.documentElement.clientHeight
+                canvas.width = pageWidth
+                canvas.height = pageHeight
+            }
+        }
+
+        function listenToUser(canvas) {
+            let using = false
+            let oldPoint = { x: "", y: "" }
+            let newPoint = { x: "", y: "" }
+            canvas.onmousedown = (e) => {
+                using = true
+                let x = e.clientX
+                let y = e.clientY
+                if (eraserEnabled) {
+                    hb.clearRect(x - 5, y - 5, eSize * 10, eSize * 10)
+                } else {
+                    oldPoint = { "x": x, "y": y }
+                }
+            }
+            canvas.onmousemove = (e) => {
+                let x = e.clientX
+                let y = e.clientY
+                if (!using) {
+                    return;
+                }
+                if (eraserEnabled) {
+                    hb.clearRect(x - 5, y - 5, eSize * 10, eSize * 10)
+                } else {
+                    newPoint = { "x": x, "y": y }
+                    drawLine(oldPoint.x, oldPoint.y, newPoint.x, newPoint.y)
+                    oldPoint = newPoint
+                }
+            }
+            canvas.onmouseup = function (a) {
+                using = false
+            }
+            function drawLine(x1, y1, x2, y2) {
+                hb.lineCap = 'round'
+                hb.lineJoin = 'round'
+                hb.lineWidth = pSize * 3
+                hb.beginPath()
+                hb.moveTo(x1, y1)
+                hb.lineTo(x2, y2)
+                hb.stroke()
+            }
+        }
+    </script>
+</body>
+
+</html>
