@@ -20,8 +20,8 @@
                     <use xlink:href="#icon-pen"></use>
                 </svg>
                 <svg id="eraser" class="icon" value="false">
-                        <use xlink:href="#icon-eraser"></use>
-                    </svg>
+                    <use xlink:href="#icon-eraser"></use>
+                </svg>
 
                 <input type="color" name="" id="color">
 
@@ -42,14 +42,19 @@
 
 
                 <svg id="download" class="icon">
-                        <use xlink:href="#icon-save"></use>
-                    </svg>
+                    <use xlink:href="#icon-save"></use>
+                </svg>
 
                 <svg id="clear" class="icon">
-                        <use xlink:href="#icon-clear"></use>
-                    </svg>
+                    <use xlink:href="#icon-clear"></use>
+                </svg>
 
-
+                <div id="pre">
+                    previous
+                </div>
+                <div id="next">
+                    next
+                </div>
 
             </div>
         </div>
@@ -68,14 +73,27 @@
         let color = document.getElementById('color')
         let download = document.getElementById('download')
         let clear = document.getElementById('clear')
-        
-        let hisCanvas = []
-        let preCanvas = undefined
-        let nextCanvas = undefined
+
+        let pre = document.getElementById('pre')
+        let next = document.getElementById('next')
+        let i = 0
+        let imgData = []
 
         autoSetCanvasSize()
         listenToUser(canvas)
-        console.dir(canvas)
+
+        pre.onclick = (e) => {
+            if (i > 0) {
+                hb.putImageData(imgData[i - 1], 0, 0);
+                i = i - 1
+            }
+        }
+        next.onclick = (e) => {
+            if (i < imgData.length - 1) {
+                hb.putImageData(imgData[i + 1], 0, 0);
+                i = i + 1
+            }
+        }
 
         pen.onclick = (e) => {
             eraserEnabled = false
@@ -103,12 +121,10 @@
                 console.dir(a)
             }
         }
-
         colorSelector.onclick = (e) => {
             color.value = e.target.dataset.colorValue
             pen.style.color = color.value
         }
-        
         download.onclick = (e) => {
             let a = document.createElement('a')
             a.href = canvas.toDataURL("image/png")
@@ -116,8 +132,13 @@
             a.target = "_blank"
             document.body.appendChild(a)
             a.click()
+            download.classList.add('active')
+            eraser.classList.remove('active')
+            setTimeout(() => {
+                download.classList.remove('active')
+                pen.classList.add('active')
+            }, 1000);
         }
-
         clear.onclick = () => {
             hb.clearRect(0, 0, canvas.width, canvas.height)
             clear.classList.add('active')
@@ -141,13 +162,18 @@
         }
 
         function listenToUser(canvas) {
+            let width = canvas.width
+            let height = canvas.height
+            let img = hb.getImageData(0, 0, width, height)
+            imgData.push(img)
+            i = imgData.length
+
             pen.style.color = color.value
             let using = false
             let oldPoint = { x: "", y: "" }
             let newPoint = { x: "", y: "" }
+
             canvas.onmousedown = (e) => {
-                preCanvas = canvas
-                hisCanvas.push(preCanvas)
                 using = true
                 let x = e.clientX
                 let y = e.clientY
@@ -173,10 +199,12 @@
             }
             canvas.onmouseup = function (a) {
                 using = false
-                nextCanvas = canvas
+                let width = canvas.width
+                let height = canvas.height
+                const img = hb.getImageData(0, 0, width, height)
+                imgData.push(img)
+                i = imgData.length
 
-                console.dir(preCanvas)
-                console.dir(nextCanvas)
             }
             function drawLine(x1, y1, x2, y2) {
                 hb.lineCap = 'round'
