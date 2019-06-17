@@ -5,11 +5,15 @@
 ol,li{
     list-style: none;
 }
+body{
+    cursor: alias ;
+}
 #hb{
     box-sizing: border-box;
     background: rgb(190, 227, 231);
     border:2px solid red;
     display: block;
+    
 }
 .icon {
     width: 1em; height: 1em;
@@ -90,17 +94,45 @@ body{
     cursor: pointer;
 }
 
-#color{
-    width:40px;height:40px;
-    border-style: none;
-    padding:0;margin:0;
-    border:none;
-    border-radius: 50%;
-    cursor:pointer;
-    background: none;
-    color:red;
+#colorSelector>span:nth-child(1){
+    background: #FF0000;
 }
 
+#colorSelector>span:nth-child(2){
+    background: #FFFF00;
+}
+
+#colorSelector>span:nth-child(3){
+    background: #008000;
+}
+
+#colorSelector>span:nth-child(4){
+    background: #0000FF;
+}
+
+#color{
+    width:40px;height:40px;
+    padding:0;margin:0;
+    cursor:pointer;
+    background: none;
+    border:none;
+}
+
+
+#color::-webkit-color-swatch{
+    height:40px;
+    border-radius:100%;
+    border:none;
+}
 #clear{
     display: inline-block;
+}
+.thickness{
+    cursor: url('./img/eraser-cursor.cur');
+}
+
+.thickness>span{
+    width:30px;
+
+    border-radius: 50%;
 }

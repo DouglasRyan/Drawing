@@ -11,30 +11,39 @@
 
 <body>
     <canvas id="hb"></canvas>
-    <div id="action">
-        <div id="turn">
-            <div class="penContainer">
-                <button id="pen" class="active">pen</button>
-                <div id="penThickness" class="thickness">
-                    <span>1</span><span>2</span><span>3</span><span>4</span>
-                </div>
-            </div>
-
-            <div class="eraserContainer">
-                <button id="eraser" value="false">eraser</button>
-                <div id="eraserThickness" class="thickness">
-                    <span>1</span><span>2</span><span>3</span><span>4</span>
-                </div>
-            </div>
-
-        </div>
-        <div id="clear">
-            <button>clear</button>
-        </div>
-        <div class="colorContainer">
-            <input type="color" name="" id="color">
+    <div class="header">
+        <h1>Canvas</h1>
+        <div class="actionContainer">
+                <div id="action">
+                        <div id="turn">
+                            <div class="penContainer">
+                                <button id="pen" class="active">pen</button>
+                                <div id="penThickness" class="thickness">
+                                    <span data-value="1"></span ><span data-value="2"></span><span data-value="3"></span><span data-value="4"></span>
+                                </div>
+                            </div>
+                
+                            <div class="eraserContainer">
+                                <button id="eraser" value="false">eraser</button>
+                                <div id="eraserThickness" class="thickness">
+                                    <span>1</span><span>2</span><span>3</span><span>4</span>
+                                </div>
+                            </div>
+                
+                        </div>
+                        <div id="clear">
+                            <button>clear</button>
+                        </div>
+                        <div class="colorContainer">
+                            <div id="colorSelector" class="thickness">
+                                <span data-color-value="#FF0000"></span><span data-color-value="#FFFF00"></span><span data-color-value="#008000"></span><span data-color-value="#0000FF"></span>
+                            </div>
+                            <input type="color" name="" id="color">
+                        </div>
+                    </div>
         </div>
     </div>
+    
     <script>
         let canvas = document.getElementById('hb')
         let hb = canvas.getContext('2d')
@@ -45,6 +54,7 @@
         let pT = document.getElementById('penThickness')
         let eSize = 2
         let pSize = 3
+        let colorSelector = document.getElementById('colorSelector')
         let color = document.getElementById('color')
         let clear = document.getElementById('clear')
 
@@ -65,13 +75,19 @@
             eraserEnabled = false
             pen.classList.add('active')
             eraser.classList.remove('active')
-            pSize = e.target.innerText - 0
+            pSize = e.target.getAttribute("data-value") - 0
         }
         eT.onclick = (e) => {
             eraserEnabled = true
             eraser.classList.add('active')
             pen.classList.remove('active')
             eSize = e.target.innerText - 0
+            canvas.style.cursor = "url('./img/eraser-cursor.png')"
+            // "url('eraser-cursor.cur')"
+            
+        }
+        colorSelector.onclick = (e) => {
+            color.value = e.target.dataset.colorValue            
         }
         clear.onclick = () => {
             hb.clearRect(0, 0, canvas.width, canvas.height)
