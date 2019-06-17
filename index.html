@@ -7,60 +7,47 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>canvas</title>
     <link rel="stylesheet" href="style.css">
-    <script src="//at.alicdn.com/t/font_1063135_qw751aqnoo.js"></script>
+    <script src="//at.alicdn.com/t/font_1063135_efik8tfmp5f.js"></script>
 </head>
 
 <body>
-    <canvas id="hb"></canvas>
     <div class="header">
-        <h1>Canvas</h1>
-        <div class="actionContainer">
-            <div id="action">
-                <svg id="pen" class="icon active">
-                    <use xlink:href="#icon-pen"></use>
-                </svg>
-                <svg id="eraser" class="icon" value="false">
-                    <use xlink:href="#icon-eraser"></use>
-                </svg>
-
-                <input type="color" name="" id="color">
-
-                <div id="size" class="thickness">
-                    <span data-value="1"></span>
-                    <span data-value="2"></span>
-                    <span data-value="3"></span>
-                    <span data-value="4"></span>
-                </div>
-
-                <div id="colorSelector" class="thickness">
-                    <span data-color-value="#FF0000"></span>
-                    <span data-color-value="#FFFF00"></span>
-                    <span data-color-value="#008000"></span>
-                    <span data-color-value="#0000FF"></span>
-
-                </div>
-
-
-                <svg id="download" class="icon">
-                    <use xlink:href="#icon-save"></use>
-                </svg>
-
-                <svg id="clear" class="icon">
-                    <use xlink:href="#icon-clear"></use>
-                </svg>
-
-                <div id="pre">
-                    previous
-                </div>
-                <div id="next">
-                    next
-                </div>
-
+        <h1>Drawing</h1>
+        <div id="action">
+            <svg id="pre" class="icon">
+                <use xlink:href="#icon--next"></use>
+            </svg>
+            <svg id="next" class="icon">
+                <use xlink:href="#icon--pre"></use>
+            </svg>
+            <svg id="pen" class="icon active">
+                <use xlink:href="#icon-pen"></use>
+            </svg>
+            <svg id="eraser" class="icon" value="false">
+                <use xlink:href="#icon-eraser"></use>
+            </svg>
+            <input type="color" name="" id="color">
+            <div id="size" class="thickness">
+                <span data-value="1"></span>
+                <span data-value="2"></span>
+                <span data-value="3"></span>
+                <span data-value="4"></span>
             </div>
+            <div id="colorSelector" class="thickness">
+                <span data-color-value="#FF0000"></span>
+                <span data-color-value="#FFFF00"></span>
+                <span data-color-value="#008000"></span>
+                <span data-color-value="#0000FF"></span>
+            </div>
+            <svg id="download" class="icon">
+                <use xlink:href="#icon-save"></use>
+            </svg>
+            <svg id="clear" class="icon">
+                <use xlink:href="#icon-clear"></use>
+            </svg>
         </div>
     </div>
-    </div>
-
+    <canvas id="hb"></canvas>
     <script>
         let canvas = document.getElementById('hb')
         let hb = canvas.getContext('2d')
@@ -73,7 +60,6 @@
         let color = document.getElementById('color')
         let download = document.getElementById('download')
         let clear = document.getElementById('clear')
-
         let pre = document.getElementById('pre')
         let next = document.getElementById('next')
         let i = 0
@@ -84,17 +70,17 @@
 
         pre.onclick = (e) => {
             if (i > 0) {
-                hb.putImageData(imgData[i - 1], 0, 0);
+                hb.putImageData(imgData[i - 2], 0, 0);
                 i = i - 1
             }
         }
         next.onclick = (e) => {
-            if (i < imgData.length - 1) {
-                hb.putImageData(imgData[i + 1], 0, 0);
+            if (i < imgData.length) {
+                hb.putImageData(imgData[i], 0, 0);
                 i = i + 1
+                e.target.classList.add('activeColor')
             }
         }
-
         pen.onclick = (e) => {
             eraserEnabled = false
             pen.classList.add('active')
@@ -125,6 +111,10 @@
             color.value = e.target.dataset.colorValue
             pen.style.color = color.value
         }
+        color.onchange = (e) => {
+            pen.style.color = e.target.value
+            console.dir(e.target.value)
+        }
         download.onclick = (e) => {
             let a = document.createElement('a')
             a.href = canvas.toDataURL("image/png")
@@ -148,8 +138,6 @@
                 clear.classList.remove('active')
             }, 1000);
         }
-
-
         function autoSetCanvasSize() {
             setCanvasSize()
             window.onresize = () => { setCanvasSize() }
@@ -160,19 +148,16 @@
                 canvas.height = pageHeight
             }
         }
-
         function listenToUser(canvas) {
             let width = canvas.width
             let height = canvas.height
             let img = hb.getImageData(0, 0, width, height)
             imgData.push(img)
             i = imgData.length
-
             pen.style.color = color.value
             let using = false
             let oldPoint = { x: "", y: "" }
             let newPoint = { x: "", y: "" }
-
             canvas.onmousedown = (e) => {
                 using = true
                 let x = e.clientX
@@ -204,7 +189,6 @@
                 const img = hb.getImageData(0, 0, width, height)
                 imgData.push(img)
                 i = imgData.length
-
             }
             function drawLine(x1, y1, x2, y2) {
                 hb.lineCap = 'round'

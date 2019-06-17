@@ -36,10 +36,6 @@ ol, li {
     transform: scale(1.2);
 }
 
-.activeColor {
-    transform: scale(1.5);
-}
-
 /* 标题 */
 
 .header>h1 {
@@ -50,7 +46,7 @@ ol, li {
 
 /* 行为 */
 
-.header>.actionContainer {
+#action {
     padding: 10px 0;
     height: 50px;
     border-bottom: #bbbbbb 1px solid;
@@ -58,13 +54,6 @@ ol, li {
     justify-content: center;
     align-items: center;
 }
-
-#action {
-    display: flex;
-    align-items: center;
-}
-
-
 
 #action span {
     padding: 10px;
@@ -137,6 +126,7 @@ ol, li {
 }
 
 /* 颜色选择 */
+
 #color {
     width: 30px;
     height: 30px;
@@ -144,15 +134,17 @@ ol, li {
     background: none;
     border: none;
     border: 2px;
-    margin:0 10px;
+    margin: 0 10px;
 }
 
 #color:focus {
     outline: none;
 }
 
-/* #color::-webkit-color-swatch-wrapper{
-} */
+/* input:color 两层div
+ ::-webkit-color-swatch-wrapper
+ ::-webkit-color-swatch
+*/
 
 #color::-webkit-color-swatch {
     border-top-right-radius: 5px;
@@ -163,11 +155,13 @@ ol, li {
 }
 
 /* icon */
+
 .icon {
-    width: 1.5em; height: 1.5em;
+    width: 1.5em;
+    height: 1.5em;
     vertical-align: -0.15em;
     fill: currentColor;
     overflow: hidden;
     margin: 0 10px;
-
+    color: rgb(0, 0, 0)
 }
