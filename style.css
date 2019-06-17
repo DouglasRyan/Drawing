@@ -1,138 +1,173 @@
-*{
+* {
     margin: 0px;
     padding: 0px;
+    box-sizing: border-box;
 }
-ol,li{
+
+body {
+    overflow: hidden;
+}
+
+ol, li {
     list-style: none;
 }
-body{
-    cursor: alias ;
-}
-#hb{
+
+/* 画板 */
+
+#hb {
     box-sizing: border-box;
-    background: rgb(190, 227, 231);
-    border:2px solid red;
     display: block;
-    
-}
-.icon {
-    width: 1em; height: 1em;
-    vertical-align: -0.15em;
-    fill: currentColor;
-    overflow: hidden;
 }
 
-body{
-    overflow: hidden;
-}
-/* button{
+/* 头部 */
+
+.header {
     position: fixed;
-    bottom:0px;
-    left:0px;
-} */
-
-.actions{
-    position: fixed;
-    top:0px;
-    left:0px;
-    padding: 20px;
-
+    top: 0;
+    display: flex;
+    flex-flow: column;
+    width: 100vw;
+    background: #ffffef;
 }
 
+/* 激活状态 */
 
-.actions svg{
-    width:2em ;
-    height: 2em;
-    transition:all 0.3s;
-    margin:0 10px;
-}
-
-.active{
-    fill: red;
+.active {
     transform: scale(1.2);
 }
 
-.colors{
-    position: fixed;
-    top: 60px;
-    left: 28px;
+.activeColor {
+    transform: scale(1.5);
 }
-.colors>li{
+
+/* 标题 */
+
+.header>h1 {
+    text-align: center;
+    border-bottom: #bbbbbb 1px solid;
+    padding: 10px 0;
+}
+
+/* 行为 */
+
+.header>.actionContainer {
+    padding: 10px 0;
+    height: 50px;
+    border-bottom: #bbbbbb 1px solid;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#action {
+    display: flex;
+    align-items: center;
+}
+
+
+
+#action span {
+    padding: 10px;
+    background: #000000;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+/* 清空画板  #clear*/
+
+#clear {
+    display: inline-block;
+}
+
+/* 画笔橡皮粗细  #size*/
+
+.thickness {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+}
+
+#size>span {
+    width: 4px;
+    height: 4px;
+    margin: auto 10px;
+    border: 1px solid #bbddbb;
+    box-shadow: 0 0 3px 1px #ddbbdd;
+}
+
+#size>span:nth-child(1) {
+    padding: 2px;
+}
+
+#size>span:nth-child(2) {
+    padding: 4px;
+}
+
+#size>span:nth-child(3) {
+    padding: 6px;
+}
+
+#size>span:nth-child(4) {
+    padding: 8px;
+}
+
+/* 颜色  */
+
+#colorSelector>span {
+    display: block;
     width: 20px;
     height: 20px;
-    border-radius: 50%;
-    box-shadow: 0 0 3px rgba(0,0,0,.25);
-    margin: 10px 0;
-}
-.colors>li.red{
-    background: red;
-}
-.colors>li.green{
-    background: green;
-}
-.colors>li.blue{
-    background: blue;
-}
-.colors>li.black{
-    background: black;
-}
-.colors>li.active{
-    box-shadow: 0 0 3px rgba(0, 0, 0,0.95);
+    margin: 0 10px;
 }
 
-
-#action{
-    position: fixed;
-    top:5px;
-    left:10px;
-    box-sizing: border-box;
-}
-
-#action span{
-    padding:0 10px;
-    border:2px solid red;
-    cursor: pointer;
-}
-
-#colorSelector>span:nth-child(1){
+#colorSelector>span:nth-child(1) {
     background: #FF0000;
 }
 
-#colorSelector>span:nth-child(2){
+#colorSelector>span:nth-child(2) {
     background: #FFFF00;
 }
 
-#colorSelector>span:nth-child(3){
+#colorSelector>span:nth-child(3) {
     background: #008000;
 }
 
-#colorSelector>span:nth-child(4){
+#colorSelector>span:nth-child(4) {
     background: #0000FF;
 }
 
-#color{
-    width:40px;height:40px;
-    padding:0;margin:0;
-    cursor:pointer;
+/* 颜色选择 */
+#color {
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
     background: none;
-    border:none;
+    border: none;
+    border: 2px;
+    margin:0 10px;
 }
 
-
-#color::-webkit-color-swatch{
-    height:40px;
-    border-radius:100%;
-    border:none;
-}
-#clear{
-    display: inline-block;
-}
-.thickness{
-    cursor: url('./img/eraser-cursor.cur');
+#color:focus {
+    outline: none;
 }
 
-.thickness>span{
-    width:30px;
+/* #color::-webkit-color-swatch-wrapper{
+} */
 
-    border-radius: 50%;
+#color::-webkit-color-swatch {
+    border-top-right-radius: 5px;
+    border-top-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    border-bottom-left-radius: 5px;
+    border: none;
+}
+
+/* icon */
+.icon {
+    width: 1.5em; height: 1.5em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+    margin: 0 10px;
+
 }

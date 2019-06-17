@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>canvas</title>
     <link rel="stylesheet" href="style.css">
+    <script src="//at.alicdn.com/t/font_1063135_qw751aqnoo.js"></script>
 </head>
 
 <body>
@@ -14,56 +15,72 @@
     <div class="header">
         <h1>Canvas</h1>
         <div class="actionContainer">
-                <div id="action">
-                        <div id="turn">
-                            <div class="penContainer">
-                                <button id="pen" class="active">pen</button>
-                                <div id="penThickness" class="thickness">
-                                    <span data-value="1"></span ><span data-value="2"></span><span data-value="3"></span><span data-value="4"></span>
-                                </div>
-                            </div>
-                
-                            <div class="eraserContainer">
-                                <button id="eraser" value="false">eraser</button>
-                                <div id="eraserThickness" class="thickness">
-                                    <span>1</span><span>2</span><span>3</span><span>4</span>
-                                </div>
-                            </div>
-                
-                        </div>
-                        <div id="clear">
-                            <button>clear</button>
-                        </div>
-                        <div class="colorContainer">
-                            <div id="colorSelector" class="thickness">
-                                <span data-color-value="#FF0000"></span><span data-color-value="#FFFF00"></span><span data-color-value="#008000"></span><span data-color-value="#0000FF"></span>
-                            </div>
-                            <input type="color" name="" id="color">
-                        </div>
-                    </div>
+            <div id="action">
+                <svg id="pen" class="icon active">
+                    <use xlink:href="#icon-pen"></use>
+                </svg>
+                <svg id="eraser" class="icon" value="false">
+                        <use xlink:href="#icon-eraser"></use>
+                    </svg>
+
+                <input type="color" name="" id="color">
+
+                <div id="size" class="thickness">
+                    <span data-value="1"></span>
+                    <span data-value="2"></span>
+                    <span data-value="3"></span>
+                    <span data-value="4"></span>
+                </div>
+
+                <div id="colorSelector" class="thickness">
+                    <span data-color-value="#FF0000"></span>
+                    <span data-color-value="#FFFF00"></span>
+                    <span data-color-value="#008000"></span>
+                    <span data-color-value="#0000FF"></span>
+
+                </div>
+
+
+                <svg id="download" class="icon">
+                        <use xlink:href="#icon-save"></use>
+                    </svg>
+
+                <svg id="clear" class="icon">
+                        <use xlink:href="#icon-clear"></use>
+                    </svg>
+
+
+
+            </div>
         </div>
     </div>
-    
+    </div>
+
     <script>
         let canvas = document.getElementById('hb')
         let hb = canvas.getContext('2d')
         let pen = document.getElementById('pen')
         let eraser = document.getElementById('eraser')
         let eraserEnabled = eraser.value
-        let eT = document.getElementById('eraserThickness')
-        let pT = document.getElementById('penThickness')
-        let eSize = 2
-        let pSize = 3
+        let size = document.getElementById('size')
+        let Size = 2
         let colorSelector = document.getElementById('colorSelector')
         let color = document.getElementById('color')
+        let download = document.getElementById('download')
         let clear = document.getElementById('clear')
+        
+        let hisCanvas = []
+        let preCanvas = undefined
+        let nextCanvas = undefined
 
         autoSetCanvasSize()
         listenToUser(canvas)
+        console.dir(canvas)
 
-        pen.onclick = () => {
+        pen.onclick = (e) => {
             eraserEnabled = false
             pen.classList.add('active')
+            pen.style.color = color.value
             eraser.classList.remove('active')
         }
         eraser.onclick = () => {
@@ -71,24 +88,36 @@
             eraser.classList.add('active')
             pen.classList.remove('active')
         }
-        pT.onclick = (e) => {
-            eraserEnabled = false
-            pen.classList.add('active')
-            eraser.classList.remove('active')
-            pSize = e.target.getAttribute("data-value") - 0
+        size.onclick = (e) => {
+            Size = e.target.getAttribute("data-value") - 0
+            if (e.target.nodeName === "SPAN") {
+                let a = e.target.parentNode.children
+                console.dir(a[0].className)
+                for (let i = 0; i < 4; i++) {
+                    if (a[i].className) {
+                        console.dir(a[i])
+                        a[i].classList.remove("active")
+                    }
+                }
+                e.target.classList.add('active')
+                console.dir(a)
+            }
         }
-        eT.onclick = (e) => {
-            eraserEnabled = true
-            eraser.classList.add('active')
-            pen.classList.remove('active')
-            eSize = e.target.innerText - 0
-            canvas.style.cursor = "url('./img/eraser-cursor.png')"
-            // "url('eraser-cursor.cur')"
-            
-        }
+
         colorSelector.onclick = (e) => {
-            color.value = e.target.dataset.colorValue            
+            color.value = e.target.dataset.colorValue
+            pen.style.color = color.value
         }
+        
+        download.onclick = (e) => {
+            let a = document.createElement('a')
+            a.href = canvas.toDataURL("image/png")
+            a.download = "刚刚画的图"
+            a.target = "_blank"
+            document.body.appendChild(a)
+            a.click()
+        }
+
         clear.onclick = () => {
             hb.clearRect(0, 0, canvas.width, canvas.height)
             clear.classList.add('active')
@@ -98,6 +127,7 @@
                 clear.classList.remove('active')
             }, 1000);
         }
+
 
         function autoSetCanvasSize() {
             setCanvasSize()
@@ -111,18 +141,20 @@
         }
 
         function listenToUser(canvas) {
+            pen.style.color = color.value
             let using = false
             let oldPoint = { x: "", y: "" }
             let newPoint = { x: "", y: "" }
             canvas.onmousedown = (e) => {
+                preCanvas = canvas
+                hisCanvas.push(preCanvas)
                 using = true
                 let x = e.clientX
                 let y = e.clientY
                 if (eraserEnabled === true) {
-                    hb.clearRect(x - 5, y - 5, eSize * 10, eSize * 10)
+                    hb.clearRect(x - 5, y - 5, Size * 10, Size * 10)
                 } else {
                     oldPoint = { "x": x, "y": y }
-
                 }
             }
             canvas.onmousemove = (e) => {
@@ -132,7 +164,7 @@
                     return;
                 }
                 if (eraserEnabled === true) {
-                    hb.clearRect(x - 5, y - 5, eSize * 10, eSize * 10)
+                    hb.clearRect(x - 5, y - 5, Size * 10, Size * 10)
                 } else {
                     newPoint = { "x": x, "y": y }
                     drawLine(oldPoint.x, oldPoint.y, newPoint.x, newPoint.y)
@@ -141,11 +173,15 @@
             }
             canvas.onmouseup = function (a) {
                 using = false
+                nextCanvas = canvas
+
+                console.dir(preCanvas)
+                console.dir(nextCanvas)
             }
             function drawLine(x1, y1, x2, y2) {
                 hb.lineCap = 'round'
                 hb.lineJoin = 'round'
-                hb.lineWidth = pSize * 3
+                hb.lineWidth = Size * 3
                 hb.strokeStyle = color.value
                 hb.beginPath()
                 hb.moveTo(x1, y1)
