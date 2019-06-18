@@ -112,7 +112,6 @@
             pen.style.color = e.target.value
         }
         download.onclick = (e) => {
-            console.dir(e)
             let a = document.createElement('a')
             a.href = canvas.toDataURL("image/png")
             a.download = "刚刚画的图"
