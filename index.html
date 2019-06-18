@@ -96,15 +96,12 @@
             Size = e.target.getAttribute("data-value") - 0
             if (e.target.nodeName === "SPAN") {
                 let a = e.target.parentNode.children
-                console.dir(a[0].className)
                 for (let i = 0; i < 4; i++) {
                     if (a[i].className) {
-                        console.dir(a[i])
                         a[i].classList.remove("active")
                     }
                 }
                 e.target.classList.add('active')
-                console.dir(a)
             }
         }
         colorSelector.onclick = (e) => {
@@ -113,9 +110,9 @@
         }
         color.onchange = (e) => {
             pen.style.color = e.target.value
-            console.dir(e.target.value)
         }
         download.onclick = (e) => {
+            console.dir(e)
             let a = document.createElement('a')
             a.href = canvas.toDataURL("image/png")
             a.download = "刚刚画的图"
@@ -162,8 +159,8 @@
             if (document.body.ontouchstart !== undefined) {
                 //触屏设备
                 canvas.ontouchstart = (e) => {
-                    let x = a.touches[0].clientX
-                    let y = a.touches[0].clientY
+                    let x = e.touches[0].clientX
+                    let y = e.touches[0].clientY
                     using = true
                     if (eraserEnabled === true) {
                         hb.clearRect(x - 5, y - 5, Size * 10, Size * 10)
@@ -172,8 +169,9 @@
                     }
                 }
                 canvas.ontouchmove = (e) => {
-                    let x = a.touches[0].clientX
-                    let y = a.touches[0].clientY
+                    e.preventDefault()
+                    let x = e.touches[0].clientX
+                    let y = e.touches[0].clientY
                     if (!using) {
                         return;
                     }
